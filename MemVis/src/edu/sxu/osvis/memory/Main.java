@@ -22,7 +22,7 @@ public class Main
         window.setTitle("Memory");
         window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        MemoryVizComponent component = new MemoryVizComponent(Kernel.getProcessList());
+        MemoryVisComponent component = new MemoryVisComponent(Kernel.getProcessList());
         window.add(component);
 
         window.pack();

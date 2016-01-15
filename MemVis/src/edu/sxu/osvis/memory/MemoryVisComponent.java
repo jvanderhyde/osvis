@@ -14,7 +14,7 @@ import java.awt.Graphics;
 import java.util.List;
 import javax.swing.JComponent;
 
-public class MemoryVizComponent extends JComponent
+public class MemoryVisComponent extends JComponent
 {
     private final List<Process> processes;
     private final int startX = 15;
@@ -22,7 +22,7 @@ public class MemoryVizComponent extends JComponent
     private final int height = 30;
     private final int baseline = startY+height+14;
 
-    public MemoryVizComponent(List<Process> processes)
+    public MemoryVisComponent(List<Process> processes)
     {
         this.processes=processes;
         this.setPreferredSize(new Dimension(MemoryController.amountOfRAM+2*startX, baseline+startY));
