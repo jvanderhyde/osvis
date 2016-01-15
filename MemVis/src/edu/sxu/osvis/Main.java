@@ -1,23 +1,14 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+//Operating system structures visualization
+//Created by James Vanderhyde, 15 January 2016
+
 package edu.sxu.osvis;
 
-/**
- *
- * @author jv4
- */
 public class Main
 {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args)
     {
-        // TODO code application logic here
+        edu.sxu.osvis.memory.Main.main(args);
     }
     
 }

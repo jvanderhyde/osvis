@@ -2,18 +2,16 @@
 //Created by James Vanderhyde, 22 March 2011
 //Modified by James Vanderhyde, 17 March 2015
 // Rolled in changes from later lab
+//Modified by James Vanderhyde, 15 January 2016
+// Moved functionality to new Kernel and MemoryController classes
 
 package edu.sxu.osvis.memory;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Scanner;
 import javax.swing.JFrame;
 
 public class Main
 {
-    public static final int amountOfRAM = 512;
-    private static ArrayList<Process> processes=new ArrayList<Process>();
     private static Scanner in=new Scanner(System.in);
     private static JFrame window=null;
 
@@ -21,13 +19,13 @@ public class Main
     {
         window = new JFrame();
 
-        window.setSize(amountOfRAM+30, 100);
         window.setTitle("Memory");
         window.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        MemoryVizComponent component = new MemoryVizComponent(processes);
+        MemoryVizComponent component = new MemoryVizComponent(Kernel.getProcessList());
         window.add(component);
 
+        window.pack();
         window.setVisible(true);
     }
 
@@ -115,13 +113,11 @@ public class Main
         int limit = in.nextInt();
         in.nextLine();
 
-        //Check for conflicts (student implementation)
-        
-
-        //If no conflicts, add process
-        Process p=new Process(base,limit);
-        processes.add(p);
-        System.out.println(""+p+" added.");
+        Process p = Kernel.addProcess(base, limit);
+        if (p==null)
+            System.out.println("Process cannot be put in memory.");
+        else
+            System.out.println(""+p+" added.");
     }
 
     public static void removeProcess()
@@ -132,18 +128,12 @@ public class Main
         in.nextLine();
 
         //Remove process
-        Iterator<Process> it=processes.iterator();
-        while (it.hasNext())
-        {
-            Process p=it.next();
-            if (p.getNumber()==num)
-                it.remove();
-        }
+        Kernel.removeProcess(num);
     }
 
     public static void printProcesses()
     {
-        for (Process p:processes)
+        for (Process p:Kernel.getProcessList())
         {
             System.out.println(""+p+" base="+p.getBase()+" limit="+p.getLimit());
         }
@@ -158,14 +148,12 @@ public class Main
         int limit = in.nextInt();
         in.nextLine();
 
-        //Figure out base address (student implementation)
-        int base=0;
-        
-
         //Add process
-        Process p=new Process(base,limit);
-        processes.add(p);
-        System.out.println(""+p+" added at base address "+base+".");
+        Process p = Kernel.addProcessFirstFit(limit);
+        if (p==null)
+            System.out.println("Process cannot be put in memory.");
+        else
+            System.out.println(""+p+" added at base address "+p.getBase()+".");
     }
 
 }

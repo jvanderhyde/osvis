@@ -9,34 +9,35 @@
 package edu.sxu.osvis.memory;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
-import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JComponent;
 
 public class MemoryVizComponent extends JComponent
 {
-    private ArrayList<Process> processes;
+    private final List<Process> processes;
+    private final int startX = 15;
+    private final int startY = 10;
+    private final int height = 30;
+    private final int baseline = startY+height+14;
 
-    public MemoryVizComponent(ArrayList<Process> processes)
+    public MemoryVizComponent(List<Process> processes)
     {
         this.processes=processes;
+        this.setPreferredSize(new Dimension(MemoryController.amountOfRAM+2*startX, baseline+startY));
     }
 
     @Override
     public void paintComponent(Graphics g)
     {
-        final int startX = 10;
-        final int startY = 10;
-        final int height = 30;
-        
         //Draw RAM, represented by a rectangle
         g.setColor(Color.BLACK);
-        g.drawRect(startX, startY, Main.amountOfRAM, height);
+        g.drawRect(startX, startY, MemoryController.amountOfRAM, height);
         
         //Draw some numbers to show RAM size
-        final int baseline = startY+height+14;
         g.drawString("0", startX-4, baseline);
-        g.drawString(""+Main.amountOfRAM, startX+Main.amountOfRAM-12, baseline);
+        g.drawString(""+MemoryController.amountOfRAM, startX+MemoryController.amountOfRAM-12, baseline);
         
         //Draw the memory allocated to the processes, represented by filled colored rectangles
         for (Process p:processes)
