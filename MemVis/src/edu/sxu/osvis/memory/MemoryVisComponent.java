@@ -17,15 +17,21 @@ import javax.swing.JComponent;
 public class MemoryVisComponent extends JComponent
 {
     private final List<Process> processes;
-    private final int startX = 15;
-    private final int startY = 10;
-    private final int height = 30;
-    private final int baseline = startY+height+14;
+    private final int marginX = 15;
+    private final int marginY = 15;
+    private final int thickness = 30;
+    private final int textHeight = 12;
+    private final int textWidthMin = 8;
+    private final int textWidthMax = 24;
+    private final boolean horizontal = false;
 
     public MemoryVisComponent(List<Process> processes)
     {
         this.processes=processes;
-        this.setPreferredSize(new Dimension(MemoryController.amountOfRAM+2*startX, baseline+startY));
+        if (horizontal)
+            this.setPreferredSize(new Dimension(MemoryController.amountOfRAM+2*marginX, textHeight+thickness+2*marginY));
+        else
+            this.setPreferredSize(new Dimension(textWidthMax+thickness+2*marginX, MemoryController.amountOfRAM+2*marginY));
     }
 
     @Override
@@ -33,19 +39,33 @@ public class MemoryVisComponent extends JComponent
     {
         //Draw RAM, represented by a rectangle
         g.setColor(Color.BLACK);
-        g.drawRect(startX, startY, MemoryController.amountOfRAM, height);
+        if (horizontal)
+            g.drawRect(marginX, marginY, MemoryController.amountOfRAM, thickness);
+        else
+            g.drawRect(marginX, marginY, thickness, MemoryController.amountOfRAM);
         
         //Draw some numbers to show RAM size
-        g.drawString("0", startX-4, baseline);
-        g.drawString(""+MemoryController.amountOfRAM, startX+MemoryController.amountOfRAM-12, baseline);
-        
+        if (horizontal)
+        {
+            g.drawString("0", marginX-textWidthMin/2, marginY+thickness+textHeight+2);
+            g.drawString(""+MemoryController.amountOfRAM, marginX+MemoryController.amountOfRAM-textWidthMax/2, marginY+thickness+textHeight+2);
+        }
+        else
+        {
+            g.drawString("0", marginX+thickness+4, marginY+textHeight/2);
+            g.drawString(""+MemoryController.amountOfRAM, marginX+thickness+4, marginY+textHeight/2+MemoryController.amountOfRAM);
+        }
+    
         //Draw the memory allocated to the processes, represented by filled colored rectangles
         for (Process p:processes)
         {
             g.setColor(getColor(p.getNumber()));
             
             //Fill in the allocated memory
-            g.fillRect(p.getBase()+startX, startY+1, p.getLimit(), height-1);
+            if (horizontal)
+                g.fillRect(p.getBase()+marginX, marginY+1, p.getLimit(), thickness-1);
+            else
+                g.fillRect(marginX+1, p.getBase()+marginY, thickness-1, p.getLimit());
         }
     }
 
@@ -55,7 +75,7 @@ public class MemoryVisComponent extends JComponent
     public static Color getColor(int c)
     {
         int r = (7*c)%64;
-        return new Color((r%4)*63,((r/4)%4)*63,(r/4/4)*63);
+        return new Color((r%4)*63+30,((r/4)%4)*63+30,(r/4/4)*63+30);
     }
 
 }
